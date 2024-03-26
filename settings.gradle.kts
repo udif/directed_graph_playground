@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Johnson75"
+rootProject.name = "Directed Graph Playground"
 include(":app")
  

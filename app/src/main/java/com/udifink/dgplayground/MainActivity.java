@@ -1,8 +1,11 @@
-package com.udifink.johnson75;
+package com.udifink.dgplayground;
 
 import android.app.AlertDialog;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -215,15 +218,26 @@ public class MainActivity extends AppCompatActivity {
         // Create an AlertDialog.Builder instance
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
 
-        // Set the title and message
+        // Set the title
         builder.setTitle(title);
-        builder.setMessage(body);
+
+        // Create a Spanned from the HTML string
+        Spanned message = Html.fromHtml(getResources().getString(body), Html.FROM_HTML_MODE_COMPACT);
+
+        // Create and show the dialog
+        AlertDialog dialog = builder.create();
+        dialog.setMessage(message);
 
         // Add an OK button
         builder.setPositiveButton("OK", null);
 
-        // Create and show the dialog
-        AlertDialog dialog = builder.create();
+        // Show the dialog
         dialog.show();
+
+        // Get the TextView of the AlertDialog and make it clickable
+        TextView messageView = (TextView) dialog.findViewById(android.R.id.message);
+        if (messageView != null) {
+            messageView.setMovementMethod(LinkMovementMethod.getInstance());
+        }
     }
 }

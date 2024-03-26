@@ -3,15 +3,15 @@ plugins {
 }
 
 android {
-    namespace = "com.udifink.johnson75"
+    namespace = "com.udifink.dgplayground"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.udifink.johnson75"
+        applicationId = "com.udifink.dgplayground"
         minSdk = 30
         targetSdk = 34
         versionCode = 1
-        versionName = "1.0"
+        versionName = "0.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
