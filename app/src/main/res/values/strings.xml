@@ -9,15 +9,17 @@
     <string name="illegal_values">Illegal values!</string>
     <string name="about_message">
         This program processes a list of vertexes given in the form of a source and destination node numbers,
-        starting at 0, describing a directed graph.\n\n
-        The output is a list of all elementary circuits of the graph given.\n\n
-        The algorithm is based on:\n
-        Johnson, D.B. (1975) Finding All the Elementary Circuits of a Directed Graph. SIAM Journal on Computing, 4, 77-84.\n
-        http://dx.doi.org/10.1137/0204007\n\n
-        Implementation was taken from:\n
-        https://github.com/josch/cycles_johnson_meyer\n
-        and forked as:\n
-        https://github.com/udif/cycles_johnson_meyer\n
+        starting at 0, describing a directed graph.<br/><br/>
+        The output is a list of all elementary circuits of the graph given.<br/><br/>
+        The algorithm is based on:<br/>
+        Johnson, D.B. (1975) Finding All the Elementary Circuits of a Directed Graph. SIAM Journal on Computing, 4, 77-84.<br/>
+        http://dx.doi.org/10.1137/0204007<br/><br/>
+        Implementation was taken from:<br/>
+        <a href="https://github.com/josch/cycles_johnson_meyer">https://github.com/josch/cycles_johnson_meyer</a><br/>
+        and forked as:<br/>
+        <a href="https://github.com/udif/cycles_johnson_meyer">https://github.com/udif/cycles_johnson_meyer</a><br/>
+
+        <a href="https://www.flaticon.com/free-icons/graph" title="graph icons">Graph icons created by SBTS2018 - Flaticon</a>
     </string>
     <string name="about_implementation">Graph library license</string>
     <string name="implementation_license">
