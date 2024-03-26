@@ -17,7 +17,7 @@ Thge sort button will sort the table.
 The RANDOMIZE button will create a random graph on the existing table rows, with the number of nodes being approximately half the number of rows.
 
 Pressing RUN will run the D.B. Johnson algorithm for Finding all the elementary circuits of a directed graph.
-For more detailson this algorithm, please consult the repositories above,
+For more details on this algorithm, please consult the repositories above,
 
 App icon was taken from:
 <a href="https://www.flaticon.com/free-icons/graph" title="graph icons">Graph icons created by SBTS2018 - Flaticon</a>
