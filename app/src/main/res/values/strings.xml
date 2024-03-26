@@ -37,4 +37,22 @@
     </string>
     <string name="about_title">About %s %s</string>
     <string name="rand">Randomize</string>
+    <string name="help">
+        How to use this program.&lt;br/&gt;&lt;br/&gt;
+        This is a small app I wrote to play around with some directed graph algorithms.&lt;br/&gt;&lt;br/&gt;
+        The main table can be created by adding rows using the ADD button.&lt;br/&gt;
+        When you add a row, please fill it with the source and destination nodes.&lt;br/&gt;
+        The sort button will sort the table.&lt;br/&gt;
+        The RANDOMIZE button will create a random graph on the existing table rows, with the number of nodes being approximately half the number of rows.&lt;br/&gt;&lt;br/&gt;
+        Pressing RUN will run the D.B. Johnson algorithm for Finding all the elementary circuits of a directed graph.&lt;br/&gt;
+        For more details on this algorithm, please consult the repositories as appearing in the About window&lt;br/&gt;
+    </string>
+    <string name="help_title">Help</string>
+    <string name="nav_help">Help</string>
+    <string name="no_rows_title">No rows added yet!</string>
+    <string name="no_rows">
+        Why don\'t you add some rows first?&lt;br/&gt;
+        Let me suggest at least 4.&lt;br/&gt;
+        If you don\'t know how to fill the rows, just press the RANDOMIZE button.
+    </string>
 </resources>

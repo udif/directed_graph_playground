@@ -141,6 +141,11 @@ public class MainActivity extends AppCompatActivity {
 
         // Assuming tableLayout is your TableLayout
         int childCount = tableLayout.getChildCount();
+
+        if (childCount == 1) {
+            about(R.string.no_rows_title, R.string.no_rows);
+            return;
+        }
         // Subtract 1 because of header, divide by 2 as density factor,
         // add 1 to make it interesting for low number of nodes
         int nodes = Math.max(2, (childCount - 1) / 2 + 1);
@@ -158,6 +163,11 @@ public class MainActivity extends AppCompatActivity {
     private void sort() {
         // Assuming tableLayout is your TableLayout
         int childCount = tableLayout.getChildCount();
+
+        if (childCount == 1) {
+            about(R.string.no_rows_title, R.string.no_rows);
+            return;
+        }
 
         // Create a list of all rows in the table
         List<TableRow> rows = new ArrayList<>();
@@ -197,8 +207,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void run() {
+        int childCount = tableLayout.getChildCount();
+        if (childCount == 1) {
+            about(R.string.no_rows_title, R.string.no_rows);
+            return;
+        }
         int num_vertices = 0;
-        for (int i = 1; i < tableLayout.getChildCount(); i++) { // start from 1 to skip headers
+        for (int i = 1; i < childCount; i++) { // start from 1 to skip headers
             TableRow row = (TableRow) tableLayout.getChildAt(i);
             TextView tvs = (TextView) row.getChildAt(0);
             TextView tvd = (TextView) row.getChildAt(1);
@@ -219,7 +234,7 @@ public class MainActivity extends AppCompatActivity {
             nodes[i] = Integer.toString(i);
         }
 
-        for (int i = 1; i < tableLayout.getChildCount(); i++) { // start from 1 to skip headers
+        for (int i = 1; i < childCount; i++) { // start from 1 to skip headers
             TableRow row = (TableRow) tableLayout.getChildAt(i);
             TextView tvs = (TextView) row.getChildAt(0);
             TextView tvd = (TextView) row.getChildAt(1);
@@ -230,6 +245,7 @@ public class MainActivity extends AppCompatActivity {
         ElementaryCyclesSearch ecs = new ElementaryCyclesSearch(adjMatrix, nodes);
 
         StringBuilder sb = new StringBuilder();
+        sb.append("Here is a list of all the elementary circuits of the graph:\n");
         List cycles = ecs.getElementaryCycles();
         for (int i = 0; i < cycles.size(); i++) {
             List cycle = (List) cycles.get(i);
