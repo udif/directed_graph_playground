@@ -6,6 +6,9 @@ android {
     namespace = "com.udifink.dgplayground"
     compileSdk = 34
 
+    buildFeatures{
+        buildConfig = true
+    }
     defaultConfig {
         applicationId = "com.udifink.dgplayground"
         minSdk = 30

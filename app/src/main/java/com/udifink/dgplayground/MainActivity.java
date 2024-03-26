@@ -1,4 +1,5 @@
 package com.udifink.dgplayground;
+import com.udifink.dgplayground.BuildConfig;
 
 import android.app.AlertDialog;
 import android.graphics.Color;
@@ -215,21 +216,24 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void about(int title, int body) {
+
         // Create an AlertDialog.Builder instance
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
 
         // Set the title
-        builder.setTitle(title);
+        builder.setTitle(String.format(getResources().getString(title), getResources().getString(R.string.app_name), BuildConfig.VERSION_NAME));
 
         // Create a Spanned from the HTML string
-        Spanned message = Html.fromHtml(getResources().getString(body), Html.FROM_HTML_MODE_COMPACT);
-
-        // Create and show the dialog
-        AlertDialog dialog = builder.create();
-        dialog.setMessage(message);
+        Spanned message = Html.fromHtml(String.format(getResources().getString(body), BuildConfig.VERSION_NAME), Html.FROM_HTML_MODE_COMPACT);
 
         // Add an OK button
         builder.setPositiveButton("OK", null);
+
+        // Create the dialog
+        AlertDialog dialog = builder.create();
+
+        // Set the message
+        dialog.setMessage(message);
 
         // Show the dialog
         dialog.show();

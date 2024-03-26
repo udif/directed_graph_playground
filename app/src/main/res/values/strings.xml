@@ -9,17 +9,17 @@
     <string name="illegal_values">Illegal values!</string>
     <string name="about_message">
         This program processes a list of vertexes given in the form of a source and destination node numbers,
-        starting at 0, describing a directed graph.<br/><br/>
-        The output is a list of all elementary circuits of the graph given.<br/><br/>
-        The algorithm is based on:<br/>
-        Johnson, D.B. (1975) Finding All the Elementary Circuits of a Directed Graph. SIAM Journal on Computing, 4, 77-84.<br/>
-        http://dx.doi.org/10.1137/0204007<br/><br/>
-        Implementation was taken from:<br/>
-        <a href="https://github.com/josch/cycles_johnson_meyer">https://github.com/josch/cycles_johnson_meyer</a><br/>
-        and forked as:<br/>
-        <a href="https://github.com/udif/cycles_johnson_meyer">https://github.com/udif/cycles_johnson_meyer</a><br/>
-
-        <a href="https://www.flaticon.com/free-icons/graph" title="graph icons">Graph icons created by SBTS2018 - Flaticon</a>
+        starting at 0, describing a directed graph.&lt;br/&gt;&lt;br/&gt;
+        The output is a list of all elementary circuits of the graph given.&lt;br/&gt;&lt;br/&gt;
+        &lt;b&gt;The algorithm is based on:&lt;/b&gt;&lt;br/&gt;
+        Johnson, D.B. (1975) &lt;i&gt;Finding All the Elementary Circuits of a Directed Graph.&lt;/i&gt; SIAM Journal on Computing, 4, 77-84.&lt;br/&gt;
+        &lt;a href="http://dx.doi.org/10.1137/0204007"&gt;http://dx.doi.org/10.1137/0204007&lt;/a&gt;&lt;br/&gt;&lt;br/&gt;
+        &lt;b&gt;Implementation was taken from:&lt;/b&gt;&lt;br/&gt;
+        &lt;a href="https://github.com/josch/cycles_johnson_meyer"&gt;https://github.com/josch/cycles_johnson_meyer&lt;/a&gt;&lt;br/&gt;&lt;br/&gt;
+        &lt;b&gt;And forked as:&lt;/b&gt;&lt;br/&gt;
+        &lt;a href="https://github.com/udif/cycles_johnson_meyer/tree/dev"&gt;https://github.com/udif/cycles_johnson_meyer/tree/dev&lt;/a&gt;&lt;br/&gt;&lt;br/&gt;
+        &lt;b&gt;Program Icon was taken from:&lt;/b&gt;&lt;br/&gt;
+        &lt;a href="https://www.flaticon.com/free-icons/graph" title="graph icons"&gt;Graph icons created by SBTS2018 - Flaticon&lt;/a&gt;
     </string>
     <string name="about_implementation">Graph library license</string>
     <string name="implementation_license">
@@ -35,5 +35,5 @@
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\n
     </string>
-    <string name="about_title">About</string>
+    <string name="about_title">About %s %s</string>
 </resources>
