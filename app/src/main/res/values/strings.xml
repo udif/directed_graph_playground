@@ -1,0 +1,37 @@
+<resources>
+    <string name="app_name">DG Playground</string>
+    <string name="add_row">Add Row</string>
+    <string name="run">Run</string>
+    <string name="sort">Sort</string>
+    <string name="navigation_drawer_open">navigation_drawer_open</string>
+    <string name="navigation_drawer_close">navigation_drawer_close</string>
+    <string name="about">About</string>
+    <string name="illegal_values">Illegal values!</string>
+    <string name="about_message">
+        This program processes a list of vertexes given in the form of a source and destination node numbers,
+        starting at 0, describing a directed graph.\n\n
+        The output is a list of all elementary circuits of the graph given.\n\n
+        The algorithm is based on:\n
+        Johnson, D.B. (1975) Finding All the Elementary Circuits of a Directed Graph. SIAM Journal on Computing, 4, 77-84.\n
+        http://dx.doi.org/10.1137/0204007\n\n
+        Implementation was taken from:\n
+        https://github.com/josch/cycles_johnson_meyer\n
+        and forked as:\n
+        https://github.com/udif/cycles_johnson_meyer\n
+    </string>
+    <string name="about_implementation">Graph library license</string>
+    <string name="implementation_license">
+    (BSD-2 license)\n\n
+
+    Copyright © 2012, Frank Meyer\n
+    All rights reserved.\n\n
+
+    Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:\n\n
+
+    Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.\n
+    Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.\n\n
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\n
+    </string>
+    <string name="about_title">About</string>
+</resources>
