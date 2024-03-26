@@ -92,6 +92,9 @@ public class MainActivity extends AppCompatActivity {
         } else if (item.getItemId() == R.id.nav_about_implementation) {
             about(R.string.about_title, R.string.implementation_license);
             return true;
+        } else if (item.getItemId() == R.id.nav_help) {
+            about(R.string.help_title, R.string.help);
+            return true;
         } else {
             return super.onOptionsItemSelected(item);
         }
