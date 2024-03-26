@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Random;
 
 import de.normalisiert.utils.graphs.ElementaryCyclesSearch;
 
@@ -54,6 +55,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 run();
+            }
+        });
+
+        Button randButton = findViewById(R.id.randButton);
+        randButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                randomize();
             }
         });
 
@@ -124,7 +133,25 @@ public class MainActivity extends AppCompatActivity {
 
         tableLayout.addView(row);
     }
+    private void randomize() {
+        Random rand = new Random();
 
+        // Assuming tableLayout is your TableLayout
+        int childCount = tableLayout.getChildCount();
+        // Subtract 1 because of header, divide by 2 as density factor,
+        // add 1 to make it interesting for low number of nodes
+        int nodes = Math.max(2, (childCount - 1) / 2 + 1);
+
+        int randomNum1 = rand.nextInt(nodes);
+        for (int i = 1; i < childCount; i++) {
+            int randomNum0 = randomNum1;
+            // Make sure these two are different
+            while(randomNum1 == randomNum0)
+                randomNum1 = rand.nextInt(nodes);
+            ((TextView)((TableRow) tableLayout.getChildAt(i)).getChildAt(0)).setText(String.valueOf(randomNum0));
+            ((TextView)((TableRow) tableLayout.getChildAt(i)).getChildAt(1)).setText(String.valueOf(randomNum1));
+        }
+    }
     private void sort() {
         // Assuming tableLayout is your TableLayout
         int childCount = tableLayout.getChildCount();
