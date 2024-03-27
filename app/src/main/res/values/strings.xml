@@ -55,4 +55,6 @@
         Let me suggest at least 4.&lt;br/&gt;
         If you don\'t know how to fill the rows, just press the RANDOMIZE button.
     </string>
+    <string name="error_title">Error</string>
+    <string name="illegal_data">Table data should only contain integers!</string>
 </resources>

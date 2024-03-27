@@ -188,15 +188,22 @@ public class MainActivity extends AppCompatActivity {
                     return 1;
                 TextView textView1 = (TextView) row1.getChildAt(0);
                 TextView textView2 = (TextView) row2.getChildAt(0);
-                Integer value2 = Integer.parseInt(textView2.getText().toString());
-                Integer value1 = Integer.parseInt(textView1.getText().toString());
-                if (!value1.equals(value2))
+                String tv1 = textView1.getText().toString();
+                String tv2 = textView2.getText().toString();
+                try {
+                    Integer value1 = Integer.parseInt(tv1);
+                    Integer value2 = Integer.parseInt(tv2);
+                    if (!value1.equals(value2))
+                        return value1.compareTo(value2);
+                    textView1 = (TextView) row1.getChildAt(1);
+                    textView2 = (TextView) row2.getChildAt(1);
+                    value1 = Integer.parseInt(textView1.getText().toString());
+                    value2 = Integer.parseInt(textView2.getText().toString());
                     return value1.compareTo(value2);
-                textView1 = (TextView) row1.getChildAt(1);
-                textView2 = (TextView) row2.getChildAt(1);
-                value1 = Integer.parseInt(textView1.getText().toString());
-                value2 = Integer.parseInt(textView2.getText().toString());
-                return value1.compareTo(value2);
+                } catch (NumberFormatException e) {
+                    about(R.string.error_title, R.string.illegal_data);
+                    return 0;
+                }
             }
         });
 
@@ -217,14 +224,19 @@ public class MainActivity extends AppCompatActivity {
             TableRow row = (TableRow) tableLayout.getChildAt(i);
             TextView tvs = (TextView) row.getChildAt(0);
             TextView tvd = (TextView) row.getChildAt(1);
-            int source = Integer.parseInt(tvs.getText().toString());
-            int destination = Integer.parseInt(tvd.getText().toString());
-            if (source < 0 || destination < 0)
-                textView.setText(R.string.illegal_values);
-            if (num_vertices < source)
-                num_vertices = source;
-            if (num_vertices < destination)
-                num_vertices = destination;
+            try {
+                int source = Integer.parseInt(tvs.getText().toString());
+                int destination = Integer.parseInt(tvd.getText().toString());
+                if (source < 0 || destination < 0)
+                    textView.setText(R.string.illegal_values);
+                if (num_vertices < source)
+                    num_vertices = source;
+                if (num_vertices < destination)
+                    num_vertices = destination;
+            } catch (NumberFormatException e) {
+                about(R.string.error_title, R.string.illegal_data);
+                return;
+            }
         }
         num_vertices++; // because nodes starts at 0
         boolean[][] adjMatrix = new boolean[num_vertices][num_vertices];
