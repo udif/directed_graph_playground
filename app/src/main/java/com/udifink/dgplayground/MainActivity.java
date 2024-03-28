@@ -1,5 +1,4 @@
 package com.udifink.dgplayground;
-import com.udifink.dgplayground.BuildConfig;
 
 import android.app.AlertDialog;
 import android.graphics.Color;
@@ -11,9 +10,11 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -22,6 +23,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -50,8 +52,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        Button sumButton = findViewById(R.id.runButton);
-        sumButton.setOnClickListener(new View.OnClickListener() {
+        Button runButton = findViewById(R.id.runButton);
+        runButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 run();
@@ -71,6 +73,34 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 sort();
+            }
+        });
+        ViewTreeObserver viewTreeObserver = addButton.getViewTreeObserver();
+        viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                // Remove the listener to only get the height once
+                addButton.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+
+                // Get the height of the tallest button
+                List<Button> b = Arrays.asList(addButton, runButton, randButton, sortButton);
+                int maxHeight = b.get(0).getHeight();
+                for (Button btn : b) {
+                    int h = btn.getHeight();
+                    if (h > maxHeight) {
+                        maxHeight = h;
+                    }
+                }
+
+                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) b.get(0).getLayoutParams();
+
+                // Update the height
+                params.height = maxHeight;
+
+                // Set the updated LayoutParams back to the LinearLayout
+                for (Button btn : b) {
+                    btn.setLayoutParams(params);
+                }
             }
         });
 
@@ -104,11 +134,11 @@ public class MainActivity extends AppCompatActivity {
     private void addHeaders() {
         TableRow row = new TableRow(this);
         TextView source = new TextView(this);
-        source.setText("Source");
+        source.setText(R.string.source);
         row.addView(source);
 
         TextView destination = new TextView(this);
-        destination.setText("Destination");
+        destination.setText(R.string.destination);
         row.addView(destination);
 
         tableLayout.addView(row);

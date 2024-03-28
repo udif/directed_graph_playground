@@ -57,4 +57,6 @@
     </string>
     <string name="error_title">Error</string>
     <string name="illegal_data">Table data should only contain integers!</string>
+    <string name="source">Source</string>
+    <string name="destination">Destination</string>
 </resources>
