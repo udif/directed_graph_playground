@@ -1,11 +1,17 @@
 package com.udifink.dgplayground;
 
 import android.app.AlertDialog;
+import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.Html;
+import android.text.SpannableStringBuilder;
 import android.text.Spanned;
+import android.text.TextWatcher;
 import android.text.method.LinkMovementMethod;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -20,12 +26,19 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.content.res.AppCompatResources;
+import androidx.preference.PreferenceManager;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -35,6 +48,42 @@ public class MainActivity extends AppCompatActivity {
 
     private TableLayout tableLayout;
     private TextView textView;
+    // does not gets updated when a TableLayout entry is modified!
+    public ArrayList<List<String>> directed_graph;
+    // This is updated by TableLayout add/delete, not directed_graph !
+    // Should match the logical number of rows (including header)
+    // directed_graph may be larger due to TableLayout deleted lines which are not deleted from directed_graph array
+    // the array is resized only on in/out serialization and when rows are added
+    private int node_count;
+    //private Drawable border;
+
+    private TextWatcher watcher = new TextWatcher() {
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            // You can leave this empty if you're not using it
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            // You can leave this empty if you're not using it
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            // This method is called to notify you that, somewhere within `s`, the text has
+            // been changed.
+            View view = getCurrentFocus();
+            if (view instanceof EditText) {
+                int[] ij = getRowIndex(tableLayout, view);
+                if (ij == null) {
+                    about(R.string.error, R.string.delete_error);
+                    return;
+                }
+                directed_graph.get(ij[0] - 1).set(ij[1], s.toString());
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +92,14 @@ public class MainActivity extends AppCompatActivity {
 
         tableLayout = findViewById(R.id.tableLayout);
         textView = findViewById(R.id.textView);
+
+        // Add initial row with headers
+        tableLayout.addView(new_row(R.string.source, R.string.destination));
+        //border = AppCompatResources.getDrawable(this, R.drawable.border);
+
+        node_count = 0;
+
+        load_shared_prefs();
 
         Button addButton = findViewById(R.id.addButton);
         addButton.setOnClickListener(new View.OnClickListener() {
@@ -103,9 +160,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-
-        // Add initial row
-        addHeaders();
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -130,161 +184,184 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
-    private void addHeaders() {
-        TableRow row = new TableRow(this);
-        TextView source = new TextView(this);
-        source.setText(R.string.source);
-        row.addView(source);
-
-        TextView destination = new TextView(this);
-        destination.setText(R.string.destination);
-        row.addView(destination);
-
-        tableLayout.addView(row);
+    // Only works for String, int (resource ID) or Integer (same)
+    private <T extends CharSequence> TableRow new_row(T source, T destination) {
+        EditText s = new EditText(this);
+        EditText d = new EditText(this);
+        s.setText(source);
+        d.setText(destination);
+        return new_row(s, d, true);
+    }
+    private TableRow new_row(int source, int destination) {
+        TextView s = new TextView(this);
+        TextView d = new TextView(this);
+        s.setText(source);
+        d.setText(destination);
+        return new_row(s, d, false);
     }
 
-    private void addRow() {
-        final TableRow row = new TableRow(this);
-        TextView source = new EditText(this);
-        row.addView(source);
+    private TableRow new_row(TextView s, TextView d, boolean del) {
+        TableRow.LayoutParams layoutParams =
+                new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
 
-        TextView destination = new EditText(this);
-        row.addView(destination);
-
-        ImageButton deleteButton = new ImageButton(this);
-        deleteButton.setImageResource(android.R.drawable.ic_delete);
-        deleteButton.setBackgroundColor(Color.TRANSPARENT);
-        deleteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                tableLayout.removeView(row);
-                run();
+        TableRow row = new TableRow(this);
+        //s.setBackground(border);
+        //d.setBackground(border);
+        s.setLayoutParams(layoutParams);
+        d.setLayoutParams(layoutParams);
+        s.addTextChangedListener(watcher);
+        d.addTextChangedListener(watcher);
+        //s.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+        //d.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+        row.addView(s);
+        row.addView(d);
+        if (del) {
+            ImageButton deleteButton = new ImageButton(this);
+            deleteButton.setLayoutParams(layoutParams);
+            deleteButton.setImageResource(android.R.drawable.ic_delete);
+            deleteButton.setBackgroundColor(Color.TRANSPARENT);
+            //deleteButton.setPadding(paddingLeft, paddingTop, paddingRight, paddingBottom);
+            //deleteButton.setPadding(0, 0, 0, 0);
+            //int paddingLeft = deleteButton.getPaddingLeft();
+            //int paddingTop = deleteButton.getPaddingTop();
+            //int paddingRight = deleteButton.getPaddingRight();
+            //int paddingBottom = deleteButton.getPaddingBottom();
+            //deleteButton.setBackground(border);
+            deleteButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int[] ij = getRowIndex(tableLayout, v);
+                    if (ij == null) {
+                        about(R.string.error, R.string.delete_error);
+                        return;
+                    }
+                    tableLayout.removeView(tableLayout.getChildAt(ij[0]));
+                    directed_graph.remove(ij[0] - 1);
+                    node_count--; // no need to update directed_graph
+                    save_shared_prefs();
+                }
+            });
+            row.addView(deleteButton);
+        }
+        return row;
+    }
+    private int[] getRowIndex(TableLayout table, View view) {
+        int[] res = new int[2];
+        // we start at 1 so we don't hit the heading
+        for (int i = 1; i < table.getChildCount(); i++) {
+            TableRow row = (TableRow) table.getChildAt(i);
+            int j = row.indexOfChild(view);
+            if (j != -1) {
+                res[0] = i;
+                res[1] = j;
+                return res;
             }
-        });
-        row.addView(deleteButton);
-
+        }
+        return null;  // View not found
+    }
+    private void addRow() {
+        final TableRow row = new_row("", "");
         tableLayout.addView(row);
+        node_count++;
+        directed_graph.add(Arrays.asList("", ""));
+        save_shared_prefs();
     }
     private void randomize() {
         Random rand = new Random();
 
-        // Assuming tableLayout is your TableLayout
-        int childCount = tableLayout.getChildCount();
-
-        if (childCount == 1) {
+        if (node_count == 0) {
             about(R.string.no_rows_title, R.string.no_rows);
             return;
         }
         // Subtract 1 because of header, divide by 2 as density factor,
         // add 1 to make it interesting for low number of nodes
-        int nodes = Math.max(2, (childCount - 1) / 2 + 1);
+        int nodes = Math.max(2, node_count / 2 + 1);
 
         int randomNum1 = rand.nextInt(nodes);
-        for (int i = 1; i < childCount; i++) {
+        for (int i = 0; i < node_count; i++) {
             int randomNum0 = randomNum1;
             // Make sure these two are different
             while(randomNum1 == randomNum0)
                 randomNum1 = rand.nextInt(nodes);
-            ((TextView)((TableRow) tableLayout.getChildAt(i)).getChildAt(0)).setText(String.valueOf(randomNum0));
-            ((TextView)((TableRow) tableLayout.getChildAt(i)).getChildAt(1)).setText(String.valueOf(randomNum1));
+            final List<String> l = directed_graph.get(i);
+            final String s0 = String.valueOf(randomNum0);
+            final String s1 = String.valueOf(randomNum1);
+            l.set(0, s0);
+            l.set(1, s1);
+            TableRow t = (TableRow)tableLayout.getChildAt(i+1);
+            ((TextView)t.getChildAt(0)).setText(s0);
+            ((TextView)t.getChildAt(1)).setText(s1);
         }
+        save_shared_prefs();
     }
     private void sort() {
         // Assuming tableLayout is your TableLayout
-        int childCount = tableLayout.getChildCount();
 
-        if (childCount == 1) {
+        if (node_count == 0) {
             about(R.string.no_rows_title, R.string.no_rows);
             return;
         }
 
-        // Create a list of all rows in the table
-        List<TableRow> rows = new ArrayList<>();
-        for (int i = 0; i < childCount; i++) {
-            rows.add((TableRow) tableLayout.getChildAt(i));
-        }
-        TableRow row0 = rows.get(0);
-        // Remove all views from the layout
-        tableLayout.removeAllViews();
-
         // Sort the row list based on the values in the first column
-        Collections.sort(rows, new Comparator<TableRow>() {
+        Collections.sort(directed_graph, new Comparator<List<String>>() {
             @Override
-            public int compare(TableRow row1, TableRow row2) {
-                if (row1 == row0)
-                    return -1;
-                if (row2 == row0)
-                    return 1;
-                TextView textView1 = (TextView) row1.getChildAt(0);
-                TextView textView2 = (TextView) row2.getChildAt(0);
-                String tv1 = textView1.getText().toString();
-                String tv2 = textView2.getText().toString();
+            public int compare(List<String> list1, List<String> list2) {
                 try {
-                    Integer value1 = Integer.parseInt(tv1);
-                    Integer value2 = Integer.parseInt(tv2);
-                    if (!value1.equals(value2))
-                        return value1.compareTo(value2);
-                    textView1 = (TextView) row1.getChildAt(1);
-                    textView2 = (TextView) row2.getChildAt(1);
-                    value1 = Integer.parseInt(textView1.getText().toString());
-                    value2 = Integer.parseInt(textView2.getText().toString());
-                    return value1.compareTo(value2);
+                    // Try to parse first strings as integers
+                    int num1 = Integer.parseInt(list1.get(0));
+                    int num2 = Integer.parseInt(list2.get(0));
+
+                    // If first strings are equal, compare second strings
+                    if (num1 == num2) {
+                        return list1.get(1).compareTo(list2.get(1));
+                    }
+
+                    // Compare first strings numerically
+                    return Integer.compare(num1, num2);
                 } catch (NumberFormatException e) {
-                    about(R.string.error_title, R.string.illegal_data);
-                    return 0;
+                    // Compare first strings lexicographically
+                    int result = list1.get(0).compareTo(list2.get(0));
+
+                    // If first strings are equal, compare second strings
+                    if (result == 0) {
+                        return list1.get(1).compareTo(list2.get(1));
+                    }
+
+                    return result;
                 }
             }
         });
-
-        // Add rows back to the table in sorted order
-        for (TableRow row : rows) {
-            tableLayout.addView(row);
-        }
+        save_shared_prefs();
+        update_TableLayout();
     }
 
     private void run() {
-        int childCount = tableLayout.getChildCount();
-        if (childCount == 1) {
+        if (node_count == 0) {
             about(R.string.no_rows_title, R.string.no_rows);
             return;
         }
         int num_vertices = 0;
-        for (int i = 1; i < childCount; i++) { // start from 1 to skip headers
-            TableRow row = (TableRow) tableLayout.getChildAt(i);
-            TextView tvs = (TextView) row.getChildAt(0);
-            TextView tvd = (TextView) row.getChildAt(1);
-            try {
-                int source = Integer.parseInt(tvs.getText().toString());
-                int destination = Integer.parseInt(tvd.getText().toString());
-                if (source < 0 || destination < 0)
-                    textView.setText(R.string.illegal_values);
-                if (num_vertices < source)
-                    num_vertices = source;
-                if (num_vertices < destination)
-                    num_vertices = destination;
-            } catch (NumberFormatException e) {
-                about(R.string.error_title, R.string.illegal_data);
-                return;
+        HashMap<String, Integer> nodes = new HashMap<String, Integer>();
+        List<Object> node_names = new ArrayList<Object>();
+        for (int i = 0; i < node_count; i++) { // start from 1 to skip headers
+            final List<String> l = directed_graph.get(i);
+            for (int j = 0; j < 2; j++) { // check both source (0) and destination (1)
+                String s = l.get(j);
+                if (!nodes.containsKey(s)) {
+                    node_names.add(s);
+                    nodes.put(s, num_vertices++);
+                }
             }
         }
-        num_vertices++; // because nodes starts at 0
         boolean[][] adjMatrix = new boolean[num_vertices][num_vertices];
-        String[] nodes = new String[num_vertices];
 
-        for (int i = 0; i < num_vertices; i++) {
-            nodes[i] = Integer.toString(i);
+        for (int i = 0; i < node_count; i++) { // start from 1 to skip headers
+            final List<String> l = directed_graph.get(i);
+            int s = nodes.get(l.get(0));
+            int d = nodes.get(l.get(1));
+            adjMatrix[s][d] = true;
         }
-
-        for (int i = 1; i < childCount; i++) { // start from 1 to skip headers
-            TableRow row = (TableRow) tableLayout.getChildAt(i);
-            TextView tvs = (TextView) row.getChildAt(0);
-            TextView tvd = (TextView) row.getChildAt(1);
-            int source = Integer.parseInt(tvs.getText().toString());
-            int destination = Integer.parseInt(tvd.getText().toString());
-            adjMatrix[source][destination] = true;
-        }
-        ElementaryCyclesSearch ecs = new ElementaryCyclesSearch(adjMatrix, nodes);
+        ElementaryCyclesSearch ecs = new ElementaryCyclesSearch(adjMatrix, node_names);
 
         StringBuilder sb = new StringBuilder();
         sb.append("Here is a list of all the elementary circuits of the graph:\n");
@@ -332,4 +409,61 @@ public class MainActivity extends AppCompatActivity {
             messageView.setMovementMethod(LinkMovementMethod.getInstance());
         }
     }
+
+    private void save_shared_prefs() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = prefs.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(directed_graph);
+        editor.putString("directed_graph", json);
+        editor.apply();
+    }
+
+    // Assume we call this only when Activity is created, and TableLayout is empty
+    private void load_shared_prefs() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        Gson gson = new Gson();
+        String json = prefs.getString("directed_graph", null);
+        Type type = new TypeToken<List<List<String>>>() {}.getType();
+        if (json == null) {
+            directed_graph = new ArrayList<>();
+        } else {
+            directed_graph = gson.fromJson(json, type);
+            node_count = directed_graph.size();
+        }
+        update_TableLayout();
+    }
+
+    private void update_directed_graph() {
+        directed_graph.ensureCapacity(node_count);
+        for (int i = 0; i < node_count; i++) {
+            TableRow row = (TableRow) tableLayout.getChildAt(i+1);
+            TextView tvs = (TextView) row.getChildAt(0);
+            TextView tvd = (TextView) row.getChildAt(1);
+            String source = tvs.getText().toString();
+            String destination = tvd.getText().toString();
+            directed_graph.set(i, Arrays.asList(source, destination));
+        }
+    }
+
+    private void update_TableLayout() {
+        int childCount = tableLayout.getChildCount();
+        // First, create new rows if needed
+        if (node_count > childCount - 1) {
+            for (int i = childCount;  i < node_count + 1; i++) {
+                final List<String> l = directed_graph.get(i-1);
+                tableLayout.addView(new_row(l.get(0), l.get(1)));
+            }
+        }
+        // Now copy rows that already existed
+        for (int i = 1; i < childCount; i++) {
+            TableRow row = (TableRow) tableLayout.getChildAt(i);
+            final List<String> l = directed_graph.get(i-1);
+            TextView tvs = (TextView) row.getChildAt(0);
+            TextView tvd = (TextView) row.getChildAt(1);
+            tvs.setText(l.get(0));
+            tvd.setText(l.get(1));
+        }
+    }
+
 }

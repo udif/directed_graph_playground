@@ -11,10 +11,10 @@ android {
     }
     defaultConfig {
         applicationId = "com.udifink.dgplayground"
-        minSdk = 30
+        minSdk = 29
         targetSdk = 34
         versionCode = 1
-        versionName = "0.1"
+        versionName = "0.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -26,6 +26,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("debug")
         }
     }
     compileOptions {
@@ -36,8 +37,12 @@ android {
 
 dependencies {
 
+    implementation(libs.graphview)
+    implementation(libs.zoomlayout)
     implementation(libs.appcompat)
     implementation(libs.material)
+    implementation(libs.gson)
+    implementation(libs.preference)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)

@@ -5,6 +5,11 @@ junitVersion = "1.1.5"
 espressoCore = "3.5.1"
 appcompat = "1.6.1"
 material = "1.11.0"
+graphview = "0.8.1"
+zoomlayout = "1.9.0"
+gson = "2.10.1"
+preference = "1.2.1"
+
 
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -12,6 +17,10 @@ ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitV
 espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+gson = { group = "com.google.code.gson", name="gson", version.ref = "gson" }
+graphview = {group =  "dev.bandb.graphview", name = "graphview", version.ref = "graphview" }
+zoomlayout = {group = "com.otaliastudios", name = "zoomlayout", version.ref = "zoomlayout" }
+preference = {group = "androidx.preference", name = "preference", version.ref = "preference" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

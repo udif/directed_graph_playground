@@ -11,7 +11,7 @@ import java.util.ArrayList;
  * just needs an array of the objects representing the nodes the graph
  * and an adjacency-matrix of type boolean, representing the edges of the
  * graph. It then calculates based on the adjacency-matrix the elementary
- * cycles and returns a list, which contains lists itself with the objects of the 
+ * cycles and returns a list, which contains lists itself with the objects of the
  * concrete graphnodes-implementation. Each of these lists represents an
  * elementary cycle.<br><br>
  *
@@ -24,21 +24,27 @@ import java.util.ArrayList;
  * components in a graph. For a description of this part see:<br>
  * Robert Tarjan: Depth-first search and linear graph algorithms. In: SIAM
  * Journal on Computing. Volume 1, Nr. 2 (1972), pp. 146-160.<br>
- * 
+ *
  * @author Frank Meyer, web_at_normalisiert_dot_de
  * @version 1.2, 22.03.2009
  *
  */
+// Define the Getter interface
+
 public class ElementaryCyclesSearch {
 	/** List of cycles */
+	interface Getter {
+		Object get(int index);
+	}
 	private List<List<Object>> cycles = null;
 
 	/** Adjacency-list of graph */
 	private int[][] adjList = null;
 
 	/** Graphnodes */
-	private Object[] graphNodes = null;
-
+	private Object[] nodes_array = null;
+	private List<Object> nodes_list = null;
+	private Getter get_node;
 	/** Blocked nodes, used by the algorithm of Johnson */
 	private boolean[] blocked = null;
 
@@ -52,14 +58,26 @@ public class ElementaryCyclesSearch {
 	 * Constructor.
 	 *
 	 * @param matrix adjacency-matrix of the graph
-	 * @param graphNodes array of the graphnodes of the graph; this is used to
+	 * @param graphNodes array or a List of the graphnodes of the graph; this is used to
 	 * build sets of the elementary cycles containing the objects of the original
 	 * graph-representation
+	 * array is more efficient if the size is known before it is created,
+	 * while a List interface is convenient if it needs to be created gradually
 	 */
-	public ElementaryCyclesSearch(boolean[][] matrix, Object[] graphNodes) {
-		this.graphNodes = graphNodes;
+
+	public ElementaryCyclesSearch(boolean[][] matrix, List<Object> graphNodes) {
+		this.nodes_list = graphNodes;
+		this.get_node = index -> nodes_list.get(index);
 		this.adjList = AdjacencyList.getAdjacencyList(matrix);
 	}
+
+	public ElementaryCyclesSearch(boolean[][] matrix, Object[] graphNodes) {
+		this.nodes_array = graphNodes;
+		this.get_node = index -> nodes_array[index];
+		this.adjList = AdjacencyList.getAdjacencyList(matrix);
+	}
+
+
 
 	/**
 	 * Returns List::List::Object with the Lists of nodes of all elementary
@@ -119,7 +137,7 @@ public class ElementaryCyclesSearch {
 				List<Object> cycle = new ArrayList<Object>();
 				for (int j = 0; j < this.stack.size(); j++) {
 					int index = ((Integer) this.stack.get(j)).intValue();
-					cycle.add(this.graphNodes[index]);
+					cycle.add(this.get_node.get(index));
 				}
 				this.cycles.add(cycle);
 				f = true;

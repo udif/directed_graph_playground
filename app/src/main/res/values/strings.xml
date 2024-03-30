@@ -59,4 +59,6 @@
     <string name="illegal_data">Table data should only contain integers!</string>
     <string name="source">Source</string>
     <string name="destination">Destination</string>
+    <string name="error">Error</string>
+    <string name="delete_error">Internal error: row to be deleted not found in TableLayout</string>
 </resources>
